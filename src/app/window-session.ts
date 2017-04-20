@@ -19,6 +19,8 @@ class WindowsSessionForDisplay {
 
 export class WindowSession {
   name: string;
+  isCloseAppsWhenLoadingSession?: boolean;
+  isCloseAppsWhenLoadingOtherDisplay?: boolean;
   displaysCombinations: [WindowsSessionForDisplay];
 }
 
