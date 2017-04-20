@@ -36,6 +36,34 @@ if (shouldQuitBecauseAppIsAnotherInstance) {
   app.quit();
 }
 
+// APP LISTENERS
+// --------------------
+
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
+// Some APIs can only be used after this event occurs.
+app.on('ready', createWindow);
+app.on('ready', setApplicationMenu);
+app.on('ready', createTray);
+app.on('ready', () => {
+  setInterval(checkMonitors, CONFIG.PING_INTERVAL);
+});
+
+app.on('before-quit', beforeQuit);
+
+app.on('activate', function () {
+  // On OS X it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  if (mainWin === null) {
+    createWindow();
+  } else {
+    mainWin.show();
+  }
+
+});
+
+// FUNCTIONS
+// --------------------
 function createWindow() {
   // Create the browser window.
   mainWin = new electron.BrowserWindow({ width: 800, height: 600 });
@@ -191,25 +219,6 @@ function createTray() {
   });
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
-app.on('ready', setApplicationMenu);
-app.on('ready', createTray);
-app.on('before-quit', beforeQuit);
-
-app.on('activate', function () {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (mainWin === null) {
-    createWindow();
-  } else {
-    mainWin.show();
-  }
-
-});
-
 function beforeQuit() {
   if (tray) {
     tray.destroy();
@@ -224,16 +233,28 @@ function beforeQuit() {
   electron.globalShortcut.unregisterAll();
 }
 
-app.on('ready', () => {
-  setInterval(checkMonitors, CONFIG.PING_INTERVAL);
-});
+function checkMonitors() {
 
+}
+
+// FRONTEND LISTENERS
+// --------------------
 // listen to events from frontend
 electron.ipcMain.on('SHUTDOWN', () => {
   app.isQuiting = true;
   app.quit();
 });
 
-function checkMonitors() {
+electron.ipcMain.on('GET_SESSION_DATA', () => {
+  db.all((err, sessionData) => {
+    mainWin.webContents.send('SESSION_DATA_READY', sessionData);
+  });
+});
 
-}
+electron.ipcMain.on('SAVE_SESSION_DATA', (ev, data) => {
+  db.save(data.sessionName, data.data, (err) => {
+    if (!err) {
+      mainWin.webContents.send('SAVED_SESSION_DATA', sessionData);
+    }
+  });
+});
