@@ -4,12 +4,31 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "startNg": "ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "start": "NODE_ENV=DEV electron ./electron/main.js",
+    "pack": "build --dir",
+    "localInstall": "sudo echo 'HIHI' && rm -Rf ./dist/ && gulp build && build && sudo dpkg -i dist/linuxWindowSessionManager*.deb"
   },
+  "author": "Johannes Millan <contact@super-productivity.com> (http://super-productivity.com)",
+  "build": {
+    "appId": "linuxWindowSessionManager",
+    "mac": {
+      "category": "productivity"
+    },
+    "win": {
+      "iconUrl": "windowsicon"
+    },
+    "linux": {
+      "target": [
+        "deb"
+      ]
+    }
+  },
+  "main": "./electron/main.js",
   "private": true,
   "dependencies": {
     "@angular/common": "^4.0.0",
@@ -21,6 +40,7 @@
     "@angular/platform-browser-dynamic": "^4.0.0",
     "@angular/router": "^4.0.0",
     "core-js": "^2.4.1",
+    "linux-window-session-manager": "^1.0.3",
     "rxjs": "^5.1.0",
     "zone.js": "^0.8.4"
   },
@@ -41,6 +61,8 @@
     "protractor": "~5.1.0",
     "ts-node": "~2.0.0",
     "tslint": "~4.5.0",
-    "typescript": "~2.2.0"
+    "typescript": "~2.2.0",
+    "electron": "^1.4.15",
+    "electron-prebuilt": "^1.4.13"
   }
 }
