@@ -31,6 +31,7 @@
   "main": "./electron/main.js",
   "private": true,
   "dependencies": {
+    "@angular-mdl/core": "^4.0.3",
     "@angular/common": "^4.0.0",
     "@angular/compiler": "^4.0.0",
     "@angular/core": "^4.0.0",
