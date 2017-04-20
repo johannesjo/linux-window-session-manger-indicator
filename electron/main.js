@@ -2,6 +2,7 @@
 
 const path = require('path');
 const url = require('url');
+const fs = require('fs');
 const electron = require('electron');
 const lwsm = require('linux-window-session-manager');
 
@@ -10,6 +11,7 @@ const db = lwsm.getDb();
 
 console.log(LWSM_CFG.SESSION_DATA_DIR);
 const CONFIG = require('./CONFIG');
+const inputHandlers = require('./inputHandlers');
 const ICONS_FOLDER = __dirname + '/assets/icons/';
 
 // Module to control application life.
@@ -58,6 +60,37 @@ function createWindow() {
   // Open the DevTools.
   mainWin.webContents.openDevTools();
 
+  // open new window links in browser
+  mainWin.webContents.on('new-window', function (event, url) {
+    event.preventDefault();
+    open(url);
+  });
+
+  mainWin.on('close', function (event) {
+    // handle darwin
+    if (process.platform === 'darwin') {
+      if (!darwinForceQuit) {
+        event.preventDefault();
+        mainWin.hide();
+      }
+    } else {
+      if (!app.isQuiting) {
+        event.preventDefault();
+        mainWin.hide();
+      }
+    }
+  });
+
+  mainWin.on('minimize', function (event) {
+    event.preventDefault();
+    mainWin.hide();
+  });
+
+  // hide initially
+  mainWin.hide();
+}
+
+function setApplicationMenu() {
   // Create application menu to enable copy & pasting on MacOS
   const menuTpl = [{
     label: 'Application',
@@ -86,32 +119,6 @@ function createWindow() {
 
   // we need to set a menu to get copy & paste working for mac os x
   electron.Menu.setApplicationMenu(electron.Menu.buildFromTemplate(menuTpl));
-
-  // open new window links in browser
-  mainWin.webContents.on('new-window', function (event, url) {
-    event.preventDefault();
-    open(url);
-  });
-
-  mainWin.on('close', function (event) {
-    // handle darwin
-    if (process.platform === 'darwin') {
-      if (!darwinForceQuit) {
-        event.preventDefault();
-        mainWin.hide();
-      }
-    } else {
-      if (!app.isQuiting) {
-        event.preventDefault();
-        mainWin.hide();
-      }
-    }
-  });
-
-  mainWin.on('minimize', function (event) {
-    event.preventDefault();
-    mainWin.hide();
-  });
 }
 
 function showOrFocus(win) {
@@ -132,29 +139,52 @@ function createTray() {
   }
 
   tray = new electron.Tray(ICONS_FOLDER + trayIcoFile);
+
   const menu = [
     {
-      label: 'Show App', click: () => {
-      mainWin.show();
-    }
+      label: 'Show App',
+      click: () => {
+        mainWin.show();
+      }
     },
     {
-      label: 'Quit', click: () => {
-      app.isQuiting = true;
-      app.quit();
-    }
+      label: 'Quit',
+      click: () => {
+        app.isQuiting = true;
+        app.quit();
+      }
     },
     {
       type: 'separator'
     },
   ];
 
-  const contextMenu = electron.Menu.buildFromTemplate(menu);
+  const sessionDataFiles = fs.readdirSync(LWSM_CFG.SESSION_DATA_DIR);
 
-  // required for mac os only
-  if (process.platform === 'darwin') {
-    tray.setContextMenu(contextMenu);
-  }
+  sessionDataFiles.forEach((sessionDataFile) => {
+    const sessionName = sessionDataFile.replace('.json', '');
+    menu.push({
+      label: 'load ' + sessionName,
+      click: () => {
+        lwsm.restoreSession(sessionName);
+      }
+    })
+  });
+  menu.push({
+    type: 'separator'
+  });
+  sessionDataFiles.forEach((sessionDataFile) => {
+    const sessionName = sessionDataFile.replace('.json', '');
+    menu.push({
+      label: 'save current to ' + sessionName,
+      click: () => {
+        lwsm.saveSession(sessionName, inputHandlers);
+      }
+    })
+  });
+
+  const contextMenu = electron.Menu.buildFromTemplate(menu);
+  tray.setContextMenu(contextMenu);
 
   tray.on('click', () => {
     mainWin.show();
@@ -165,6 +195,7 @@ function createTray() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow);
+app.on('ready', setApplicationMenu);
 app.on('ready', createTray);
 app.on('before-quit', beforeQuit);
 
