@@ -1,5 +1,5 @@
 <div class="demo-container demo-layout-transparent">
-  <mdl-layout #mdlLayout1="mdlLayout">
+  <mdl-layout>
     <mdl-layout-header>
       <mdl-layout-header-row>
         <mdl-layout-title>Linux Window Session Manager</mdl-layout-title>
@@ -12,7 +12,7 @@
 
     <mdl-layout-content>
       <!--<router-outlet></router-outlet>-->
-
+      <h1>CONTENT</h1>
       <div *ngFor="let session of sessions">
         <h4>{{ session.name}}</h4>
         <div *ngFor="let display of session.displaysCombinations">
@@ -26,8 +26,3 @@
     </mdl-layout-content>
   </mdl-layout>
 </div>
-<button mdl-button
-        (click)="mdlLayout1.toggleDrawer()"
-        mdl-button-type="raised"
-        mdl-colored="primary">Toggle Drawer
-</button>

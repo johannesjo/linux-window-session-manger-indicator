@@ -48,6 +48,10 @@ app.on('ready', createTray);
 app.on('ready', () => {
   setInterval(checkMonitors, CONFIG.PING_INTERVAL);
 });
+app.on('ready', () => {
+  // hide initially
+  // mainWin.hide();
+});
 
 app.on('before-quit', beforeQuit);
 
@@ -113,9 +117,6 @@ function createWindow() {
     event.preventDefault();
     mainWin.hide();
   });
-
-  // hide initially
-  mainWin.hide();
 }
 
 function setApplicationMenu() {
@@ -246,15 +247,29 @@ electron.ipcMain.on('SHUTDOWN', () => {
 });
 
 electron.ipcMain.on('GET_SESSION_DATA', () => {
-  db.all((err, sessionData) => {
-    mainWin.webContents.send('SESSION_DATA_READY', sessionData);
+  db.all((err, sessionDataEntries) => {
+    if (err) {
+      mainWin.webContents.send('GET_SESSION_DATA_ERROR', err);
+    } else {
+
+      // transform data to array
+      const entries = [];
+      for (let key of Object.keys(sessionDataEntries)) {
+        entries.push(sessionDataEntries[key]);
+      }
+
+      // send data
+      mainWin.webContents.send('GET_SESSION_DATA_READY', entries);
+    }
   });
 });
 
 electron.ipcMain.on('SAVE_SESSION_DATA', (ev, data) => {
   db.save(data.sessionName, data.data, (err) => {
     if (!err) {
-      mainWin.webContents.send('SAVED_SESSION_DATA', sessionData);
+      mainWin.webContents.send('SAVED_SESSION_DATA');
+    } else {
+
     }
   });
 });
