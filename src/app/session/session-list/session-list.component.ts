@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {WindowSession} from './window-session';
-import {WindowSessionService} from './window-session.service';
+import {WindowSession} from '../window-session';
+import {WindowSessionService} from '../window-session.service';
 
 @Component({
   selector: 'app-session-list',
@@ -21,7 +21,6 @@ export class SessionListComponent implements OnInit {
   getSessions(): void {
     this.windowSessionService.getSessions()
       .then((sessions) => {
-        console.log(sessions);
         this.sessions = sessions
       });
   }
