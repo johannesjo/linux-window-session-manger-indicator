@@ -5,25 +5,17 @@
       <mdl-layout-header-row>
         <mdl-layout-title>Linux Window Session Manager</mdl-layout-title>
         <mdl-layout-spacer></mdl-layout-spacer>
-        <nav class="mdl-navigation">
-          <a class="mdl-navigation__link">Save new session</a>
-        </nav>
+        <!--<nav class="mdl-navigation">-->
+          <!--<a class="mdl-navigation__link">Save new session</a>-->
+        <!--</nav>-->
       </mdl-layout-header-row>
     </mdl-layout-header>
 
     <mdl-layout-content>
-      <!--<router-outlet></router-outlet>-->
-      <h1>CONTENT</h1>
-      <div *ngFor="let session of sessions">
-        <h4>{{ session.name}}</h4>
-        <div *ngFor="let display of session.displaysCombinations">
-          <h4>{{ display.id }}</h4>
-          <div *ngFor="let win of display.windowList">
-            {{ win|json}}
-          </div>
-        </div>
-      </div>
-
+      <main class="content">
+        <!--<router-outlet></router-outlet>-->
+        <app-session-list></app-session-list>
+      </main>
     </mdl-layout-content>
   </mdl-layout>
 </div>

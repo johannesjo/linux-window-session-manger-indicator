@@ -6,21 +6,26 @@ class WindowData {
   y: number;
   width: number;
   height: number;
-  wmClassName: string;
   executableFile: string;
   desktopFilePath?: string;
   states: any[];
+  simpleName: string;
+  wmClassName: string;
+  wmTitle?: string;
+  wmType?: string;
+  wmPid: number;
+  wmCurrentDesktopNr: number;
 }
 
-class WindowsSessionForDisplay {
+class DisplayCombinations {
   id: string;
   windowList: [WindowData];
 }
 
 export class WindowSession {
-  name: [WindowsSessionForDisplay];
+  name: string;
   isCloseAppsWhenLoadingSession?: boolean;
   isCloseAppsWhenLoadingOtherDisplay?: boolean;
-  displaysCombinations: [WindowsSessionForDisplay];
+  displaysCombinations: [DisplayCombinations];
 }
 

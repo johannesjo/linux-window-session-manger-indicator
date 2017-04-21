@@ -3,7 +3,6 @@ import {WindowSession} from './window-session';
 import {WINDOW_SESSIONS} from './window-sessions-mock';
 import {ElectronService} from 'ngx-electron';
 
-
 @Injectable()
 export class WindowSessionService {
   constructor(private _electronService: ElectronService) {

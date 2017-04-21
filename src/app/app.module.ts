@@ -6,10 +6,12 @@ import {MdlModule} from '@angular-mdl/core';
 import {NgxElectronModule} from 'ngx-electron';
 
 import {AppComponent} from './app.component';
+import {SessionListComponent} from './session-list/session-list.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    SessionListComponent
   ],
   imports: [
     BrowserModule,
