@@ -32,7 +32,7 @@
       <button mdl-button
               mdl-button-type="icon"
               mdl-ripple
-              (click)="saveSession(session.name)">
+              (click)="saveCurrentSession(session.name)">
         <mdl-icon>save</mdl-icon>
       </button>
       <button mdl-button
@@ -42,5 +42,24 @@
         <mdl-icon>mode_edit</mdl-icon>
       </button>
     </mdl-card-menu>
+  </mdl-card>
+
+  <!-- new session card -->
+  <mdl-card mdl-shadow="3"
+            mdl-card-expand="true"
+            class="mdl-cell mdl-cell--6-col">
+    <mdl-card-title>
+      <h2 mdl-card-title-text>Save current windows to new session</h2>
+    </mdl-card-title>
+    <mdl-card-supporting-text>
+      <input type="text"
+             [(ngModel)]="newSessionName">
+      <button mdl-button
+              mdl-ripple
+              (click)="saveNewSession(newSessionName)">
+        <mdl-icon>save</mdl-icon>
+        Save new session
+      </button>
+    </mdl-card-supporting-text>
   </mdl-card>
 </div>

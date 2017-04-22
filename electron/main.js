@@ -274,6 +274,16 @@ electron.ipcMain.on('SAVE_SESSION_DATA', (ev, sessionData) => {
   });
 });
 
+electron.ipcMain.on('SAVE_CURRENT_SESSION', (ev, sessionName) => {
+  lwsm.saveSession(sessionName, inputHandlers)
+    .then(() => {
+      mainWin.webContents.send('SAVE_CURRENT_SESSION_SUCCESS');
+    })
+    .catch((err) => {
+      mainWin.webContents.send('SAVE_CURRENT_SESSION_ERROR', err);
+    });
+});
+
 electron.ipcMain.on('LOAD_SESSION', (ev, sessionName) => {
   lwsm.restoreSession(sessionName)
     .then(() => {

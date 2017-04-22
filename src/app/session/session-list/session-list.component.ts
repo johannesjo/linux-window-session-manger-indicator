@@ -10,6 +10,7 @@ import {WindowSessionService} from '../window-session.service';
 })
 export class SessionListComponent implements OnInit {
   sessions: WindowSession[];
+  newSessionName: string;
 
   constructor(private windowSessionService: WindowSessionService) {
   }
@@ -25,17 +26,28 @@ export class SessionListComponent implements OnInit {
       });
   }
 
-  saveSession(session: WindowSession): void {
-    console.log('SAVE', session);
-    this.windowSessionService.saveSession(session)
+  saveNewSession(newSessionName: string): void {
+    console.log(newSessionName);
+
+    this.saveCurrentSession(newSessionName)
       .then(() => {
-        console.log('SESSION SAVED');
+        this.newSessionName = '';
       });
   }
 
-  loadSession(session: WindowSession): void {
+  saveCurrentSession(sessionName: string): Promise<any> {
+    console.log('CURRENT SAVE', sessionName);
+    return this.windowSessionService.saveCurrentSessionTo(sessionName)
+      .then(() => {
+        // reload sessions
+        this.getSessions();
+        console.log('CURRENT SESSION SAVED');
+      });
+  }
+
+  loadSession(session: WindowSession): Promise<any> {
     console.log('LOAD', session.name);
-    this.windowSessionService.loadSession(session.name)
+    return this.windowSessionService.loadSession(session.name)
       .then(() => {
         console.log('SESSION LOADED');
       });
