@@ -1,11 +1,26 @@
 <h6>{{ windowDataCopy.simpleName }}
-  <button (click)="showThis=!showThis;">Edit</button>
-  <button (click)="remove()">Delete</button>
-  <button (click)="save()">Save</button>
+  <button mdl-button
+          mdl-button-type="icon"
+          mdl-ripple
+          (click)="showEdit=!showEdit;">
+    <mdl-icon>mode_edit</mdl-icon>
+  </button>
+  <button mdl-button
+          mdl-button-type="icon"
+          mdl-ripple
+          (click)="remove()">
+    <mdl-icon>delete</mdl-icon>
+  </button>
+  <button mdl-button
+          mdl-button-type="icon"
+          mdl-ripple
+          (click)="save()">
+    <mdl-icon>save</mdl-icon>
+  </button>
 </h6>
 
 <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp"
-       [hidden]="!showThis">
+       [hidden]="!showEdit">
   <tbody>
     <tr *ngFor="let key of WINDOW_DATA_KEYS">
       <td class="mdl-data -table__cell--non-numeric">{{ key }}</td>
