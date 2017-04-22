@@ -11,6 +11,8 @@
       <mdl-card-supporting-text>
         <div *ngFor="let display of session.displaysCombinations">
           <h6>Resolution: {{ display.id }}</h6>
+          <img [src]="'assets/screens/'+session.name+'-'+display.id+'.jpg'"
+               style="max-width: 100%; margin-bottom: 10px; display: block;">
           <div><strong>Programs:</strong>
             <span *ngFor="let win of display.windowList; let last=last;">{{ win.simpleName }}<span *ngIf="!last">,</span></span>
           </div>

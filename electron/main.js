@@ -252,14 +252,17 @@ function checkMonitors() {
 }
 
 function takeScreenShotForSession(sessionName, cb) {
-  exec(`gnome-screenshot --file ${ASSET_FILE_PATH}${sessionName}.jpg`, (err, res) => {
-    if (err) {
-      console.error(err);
-    }
-    if (cb) {
-      cb(res);
-    }
-  })
+  lwsm.getConnectedDisplaysId()
+    .then((connectedDisplaysId) => {
+      exec(`gnome-screenshot --file ${ASSET_FILE_PATH}${sessionName}-${connectedDisplaysId}.jpg`, (err, res) => {
+        if (err) {
+          console.error(err);
+        }
+        if (cb) {
+          cb(res);
+        }
+      });
+    });
 }
 
 // FRONTEND LISTENERS
