@@ -26,6 +26,15 @@ export class SessionListComponent implements OnInit {
       });
   }
 
+  removeSession(sessionName: string): void {
+    this.windowSessionService.removeSession(sessionName)
+      .then(() => {
+        // reload sessions
+        this.getSessions();
+        console.log('SESSION REMOVED');
+      });
+  }
+
   saveNewSession(newSessionName: string): void {
     console.log(newSessionName);
 

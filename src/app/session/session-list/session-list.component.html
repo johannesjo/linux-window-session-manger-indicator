@@ -38,6 +38,12 @@
       <button mdl-button
               mdl-button-type="icon"
               mdl-ripple
+              (click)="removeSession(session.name)">
+        <mdl-icon>delete</mdl-icon>
+      </button>
+      <button mdl-button
+              mdl-button-type="icon"
+              mdl-ripple
               [routerLink]="['/session',session.name]">
         <mdl-icon>mode_edit</mdl-icon>
       </button>

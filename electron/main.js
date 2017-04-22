@@ -33,7 +33,9 @@ let shouldQuitBecauseAppIsAnotherInstance = app.makeSingleInstance(() => {
   }
 });
 if (shouldQuitBecauseAppIsAnotherInstance) {
-  app.quit();
+  console.log('QUITING because another instance is running already');
+  app.exit(1);
+  process.exit(1);
 }
 
 // APP LISTENERS
@@ -272,6 +274,16 @@ electron.ipcMain.on('SAVE_SESSION_DATA', (ev, sessionData) => {
       mainWin.webContents.send('SAVE_SESSION_DATA_SUCCESS', res);
     }
   });
+});
+
+electron.ipcMain.on('REMOVE_SESSION', (ev, sessionName) => {
+  lwsm.removeSession(sessionName)
+    .then(() => {
+      mainWin.webContents.send('REMOVE_SESSION_SUCCESS');
+    })
+    .catch((err) => {
+      mainWin.webContents.send('REMOVE_SESSION_ERROR', err);
+    });
 });
 
 electron.ipcMain.on('SAVE_CURRENT_SESSION', (ev, sessionName) => {
