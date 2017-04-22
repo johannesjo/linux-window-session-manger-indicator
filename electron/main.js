@@ -170,6 +170,15 @@ function createTray() {
   }
 
   tray = new electron.Tray(ICONS_FOLDER + trayIcoFile);
+  setContextMenu();
+
+  //tray.on('click', () => {
+  //  mainWin.show();
+  //});
+}
+
+function setContextMenu() {
+  console.log('SET CONTEXT');
 
   const menu = [
     {
@@ -216,10 +225,6 @@ function createTray() {
 
   const contextMenu = electron.Menu.buildFromTemplate(menu);
   tray.setContextMenu(contextMenu);
-
-  tray.on('click', () => {
-    mainWin.show();
-  });
 }
 
 function beforeQuit() {
@@ -271,6 +276,7 @@ electron.ipcMain.on('SAVE_SESSION_DATA', (ev, sessionData) => {
     if (err) {
       mainWin.webContents.send('SAVE_SESSION_DATA_ERROR', err);
     } else {
+      setContextMenu();
       mainWin.webContents.send('SAVE_SESSION_DATA_SUCCESS', res);
     }
   });
@@ -279,6 +285,7 @@ electron.ipcMain.on('SAVE_SESSION_DATA', (ev, sessionData) => {
 electron.ipcMain.on('REMOVE_SESSION', (ev, sessionName) => {
   lwsm.removeSession(sessionName)
     .then(() => {
+      setContextMenu();
       mainWin.webContents.send('REMOVE_SESSION_SUCCESS');
     })
     .catch((err) => {
@@ -289,6 +296,7 @@ electron.ipcMain.on('REMOVE_SESSION', (ev, sessionName) => {
 electron.ipcMain.on('SAVE_CURRENT_SESSION', (ev, sessionName) => {
   lwsm.saveSession(sessionName, inputHandlers)
     .then(() => {
+      setContextMenu();
       mainWin.webContents.send('SAVE_CURRENT_SESSION_SUCCESS');
     })
     .catch((err) => {
