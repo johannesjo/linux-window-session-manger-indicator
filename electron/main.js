@@ -273,3 +273,13 @@ electron.ipcMain.on('SAVE_SESSION_DATA', (ev, sessionData) => {
     }
   });
 });
+
+electron.ipcMain.on('LOAD_SESSION', (ev, sessionName) => {
+  lwsm.restoreSession(sessionName)
+    .then(() => {
+      mainWin.webContents.send('LOAD_SESSION_SUCCESS');
+    })
+    .catch((err) => {
+      mainWin.webContents.send('LOAD_SESSION_ERROR', err);
+    });
+});

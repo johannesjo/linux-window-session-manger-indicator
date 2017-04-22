@@ -8,6 +8,23 @@ export class WindowSessionService {
   constructor(private _electronService: ElectronService) {
   }
 
+  loadSession(sessionName: string): Promise<any> {
+    // send back mock for browser dev
+    if (!this._electronService.ipcRenderer) {
+      return Promise.resolve({});
+    }
+
+    return new Promise((resolve, reject) => {
+      this._electronService.ipcRenderer.send('LOAD_SESSION', sessionName);
+      this._electronService.ipcRenderer.once('LOAD_SESSION_SUCCESS', (res) => {
+        resolve(res);
+      });
+      this._electronService.ipcRenderer.once('LOAD_SESSION_ERROR', (ev, error) => {
+        reject(error);
+      });
+    });
+  }
+
   getSession(sessionName: string): Promise<WindowSession> {
     // send back mock for browser dev
     if (!this._electronService.ipcRenderer) {

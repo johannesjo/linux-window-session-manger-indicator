@@ -25,17 +25,19 @@ export class SessionListComponent implements OnInit {
       });
   }
 
-  saveSession(sessionName: string): void {
-    console.log('SAVE', sessionName);
-    // this.windowSessionService.saveSession(sessionName)
-    //   .then(() => {
-    //   });
+  saveSession(session: WindowSession): void {
+    console.log('SAVE', session);
+    this.windowSessionService.saveSession(session)
+      .then(() => {
+        console.log('SESSION SAVED');
+      });
   }
 
-  loadSession(sessionName: string): void {
-    console.log('LOAD', sessionName);
-    // this.windowSessionService.loadSession(sessionName)
-    //   .then(() => {
-    //   });
+  loadSession(session: WindowSession): void {
+    console.log('LOAD', session.name);
+    this.windowSessionService.loadSession(session.name)
+      .then(() => {
+        console.log('SESSION LOADED');
+      });
   }
 }
