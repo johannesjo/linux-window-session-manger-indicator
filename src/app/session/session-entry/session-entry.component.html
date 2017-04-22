@@ -1,4 +1,5 @@
-<div *ngIf="session">
+<div *ngIf="session"
+     [ngBusy]="isLoading">
   <h4>Edit: {{ session.name }}</h4>
   <a [routerLink]="['/session-list']">Go back to overview</a>
   <div *ngFor="let displayCombo of session.displaysCombinations">

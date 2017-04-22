@@ -15,6 +15,7 @@ export class SessionEntryComponent implements OnInit, OnDestroy {
   private _subscription: any;
   session: WindowSession;
   sessionName: string;
+  isLoading: Promise<any>;
 
   constructor(private windowSessionService: WindowSessionService, private route: ActivatedRoute) {
   }
@@ -24,6 +25,13 @@ export class SessionEntryComponent implements OnInit, OnDestroy {
       this.sessionName = params['sessionName'];
       this.loadData(this.sessionName);
     });
+    // this.isLoading = new Promise((fullfil, reject) => {
+    //   console.log('LOADING');
+    //   setTimeout(() => {
+    //     console.log('NOT LOADING');
+    //     fullfil({});
+    //   }, 200000)
+    // });
   }
 
   ngOnDestroy(): void {
@@ -31,7 +39,7 @@ export class SessionEntryComponent implements OnInit, OnDestroy {
   }
 
   loadData(sessionName: string): void {
-    this.windowSessionService.getSession(sessionName)
+    this.isLoading = this.windowSessionService.getSession(sessionName)
       .then((session) => {
         this.session = session;
       });
@@ -51,7 +59,7 @@ export class SessionEntryComponent implements OnInit, OnDestroy {
   }
 
   saveSession(): void {
-    this.windowSessionService.saveSession(this.session)
+    this.isLoading = this.windowSessionService.saveSession(this.session)
       .then((res) => {
         console.log('SAVED', this.session, res);
       });

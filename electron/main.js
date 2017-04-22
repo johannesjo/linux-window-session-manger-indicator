@@ -76,6 +76,9 @@ function createWindow() {
 
   if (process.env.NODE_ENV === 'DEV') {
     mainWin.loadURL('http://localhost:4200/');
+
+    // Open the DevTools.
+    mainWin.webContents.openDevTools();
   } else {
     // and load the index.html of the app.
     mainWin.loadURL(
@@ -91,8 +94,7 @@ function createWindow() {
     );
   }
 
-  // Open the DevTools.
-  mainWin.webContents.openDevTools();
+
 
   // open new window links in browser
   mainWin.webContents.on('new-window', function (event, url) {

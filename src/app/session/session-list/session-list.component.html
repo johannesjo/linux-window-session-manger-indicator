@@ -1,73 +1,75 @@
 <h3>Saved Sessions</h3>
-<div class="mdl-grid">
-  <mdl-card mdl-shadow="3"
-            mdl-card-expand="true"
-            class="mdl-cell mdl-cell--6-col"
-            *ngFor="let session of sessions">
-    <mdl-card-title>
-      <h2 mdl-card-title-text>{{ session.name}}</h2>
-    </mdl-card-title>
-    <mdl-card-supporting-text>
-      <div *ngFor="let display of session.displaysCombinations">
-        <h6>Resolution: {{ display.id }}</h6>
-        <div><strong>Programs:</strong>
-          <span *ngFor="let win of display.windowList; let last=last;">{{ win.simpleName }}<span *ngIf="!last">,</span></span>
+<div [ngBusy]="isLoading">
+  <div class="mdl-grid">
+    <mdl-card mdl-shadow="3"
+              mdl-card-expand="true"
+              class="mdl-cell mdl-cell--6-col"
+              *ngFor="let session of sessions">
+      <mdl-card-title>
+        <h2 mdl-card-title-text>{{ session.name}}</h2>
+      </mdl-card-title>
+      <mdl-card-supporting-text>
+        <div *ngFor="let display of session.displaysCombinations">
+          <h6>Resolution: {{ display.id }}</h6>
+          <div><strong>Programs:</strong>
+            <span *ngFor="let win of display.windowList; let last=last;">{{ win.simpleName }}<span *ngIf="!last">,</span></span>
+          </div>
         </div>
-      </div>
 
-    </mdl-card-supporting-text>
-    <mdl-card-menu>
-      <button mdl-button
-              mdl-button-type="icon"
-              mdl-ripple
-              (click)="loadSession(session)">
-        <mdl-icon>ondemand_video</mdl-icon>
-      </button>
-      <button mdl-button
-              mdl-button-type="icon"
-              mdl-ripple
-              (click)="saveCurrentSession(session.name)">
-        <mdl-icon>save</mdl-icon>
-      </button>
-      <button mdl-button
-              mdl-button-type="icon"
-              mdl-ripple
-              (click)="removeSession(session.name)">
-        <mdl-icon>delete</mdl-icon>
-      </button>
-      <button mdl-button
-              mdl-button-type="icon"
-              mdl-ripple
-              [routerLink]="['/session',session.name]">
-        <mdl-icon>mode_edit</mdl-icon>
-      </button>
-    </mdl-card-menu>
-  </mdl-card>
+      </mdl-card-supporting-text>
+      <mdl-card-menu>
+        <button mdl-button
+                mdl-button-type="icon"
+                mdl-ripple
+                (click)="loadSession(session)">
+          <mdl-icon>ondemand_video</mdl-icon>
+        </button>
+        <button mdl-button
+                mdl-button-type="icon"
+                mdl-ripple
+                (click)="saveCurrentSession(session.name)">
+          <mdl-icon>save</mdl-icon>
+        </button>
+        <button mdl-button
+                mdl-button-type="icon"
+                mdl-ripple
+                (click)="removeSession(session.name)">
+          <mdl-icon>delete</mdl-icon>
+        </button>
+        <button mdl-button
+                mdl-button-type="icon"
+                mdl-ripple
+                [routerLink]="['/session',session.name]">
+          <mdl-icon>mode_edit</mdl-icon>
+        </button>
+      </mdl-card-menu>
+    </mdl-card>
 
-  <!-- new session card -->
-  <mdl-card mdl-shadow="3"
-            style="text-align: center;"
-            mdl-card-expand="true"
-            class="mdl-cell mdl-cell--6-col">
-    <mdl-card-title>
-      <h2 mdl-card-title-text>Save current windows to new session</h2>
-    </mdl-card-title>
-    <mdl-card-supporting-text>
-      <div class="mdl-textfield mdl-js-textfield">
-        <input class="mdl-textfield__input"
-               type="text"
-               id="newSessionName"
-               [(ngModel)]="newSessionName"/>
-        <label class="mdl-textfield__label"
-               for="newSessionName">New session name
-        </label>
-      </div>
-      <button mdl-button
-              mdl-ripple
-              (click)="saveNewSession(newSessionName)">
-        <mdl-icon>save</mdl-icon>
-        Save new session
-      </button>
-    </mdl-card-supporting-text>
-  </mdl-card>
+    <!-- new session card -->
+    <mdl-card mdl-shadow="3"
+              style="text-align: center;"
+              mdl-card-expand="true"
+              class="mdl-cell mdl-cell--6-col">
+      <mdl-card-title>
+        <h2 mdl-card-title-text>Save current windows to new session</h2>
+      </mdl-card-title>
+      <mdl-card-supporting-text>
+        <div class="mdl-textfield mdl-js-textfield">
+          <input class="mdl-textfield__input"
+                 type="text"
+                 id="newSessionName"
+                 [(ngModel)]="newSessionName"/>
+          <label class="mdl-textfield__label"
+                 for="newSessionName">New session name
+          </label>
+        </div>
+        <button mdl-button
+                mdl-ripple
+                (click)="saveNewSession(newSessionName)">
+          <mdl-icon>save</mdl-icon>
+          Save new session
+        </button>
+      </mdl-card-supporting-text>
+    </mdl-card>
+  </div>
 </div>
