@@ -8,12 +8,14 @@ import {NgxElectronModule} from 'ngx-electron';
 import {AppComponent} from './app.component';
 import {SessionListComponent} from './session/session-list/session-list.component';
 import {SessionEntryComponent} from './session/session-entry/session-entry.component';
+import {WindowDataEntryComponent} from './session/window-data-entry/window-data-entry.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SessionListComponent,
-    SessionEntryComponent
+    SessionEntryComponent,
+    WindowDataEntryComponent
   ],
   imports: [
     BrowserModule,

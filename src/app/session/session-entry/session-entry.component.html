@@ -1,4 +1,13 @@
 <div *ngIf="session">
   <h4>Edit: {{ session.name }}</h4>
 
+  <div *ngFor="let displayCombo of session.displaysCombinations">
+    <h5>Resolution (total of screen combination): {{ displayCombo.id }}</h5>
+
+    <div *ngFor="let windowData of displayCombo.windowList">
+      <app-window-data-entry [windowData]="windowData"
+                             (saveEv)="saveEntry($event,displayCombo.windowList)"
+                             (removeEv)="removeEntry($event,displayCombo.windowList)"></app-window-data-entry>
+    </div>
+  </div>
 </div>

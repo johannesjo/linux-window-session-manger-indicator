@@ -33,7 +33,27 @@ export class SessionEntryComponent implements OnInit, OnDestroy {
   loadData(sessionName: string): void {
     this.windowSessionService.getSession(sessionName)
       .then((session) => {
-        this.session = session
+        this.session = session;
+      });
+  }
+
+  removeEntry(entryId: string, windowList) {
+    const index = windowList.findIndex((entry) => entry.windowId === entryId);
+    windowList.splice(index, 1);
+    this.saveSession();
+  }
+
+  saveEntry(entryId: string, windowList) {
+    const entry = windowList.find((entry) => entry.windowId === entryId);
+    console.log(entry);
+    console.log('SAVE', entryId);
+    this.saveSession();
+  }
+
+  saveSession(): void {
+    this.windowSessionService.saveSession(this.session)
+      .then((res) => {
+        console.log('SAVED', this.session, res);
       });
   }
 }

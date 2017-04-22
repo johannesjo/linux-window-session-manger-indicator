@@ -1,0 +1,37 @@
+<h6>{{ windowDataCopy.simpleName }}
+  <button (click)="showThis=!showThis;">Edit</button>
+  <button (click)="remove()">Delete</button>
+  <button (click)="save()">Save</button>
+</h6>
+
+<table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp"
+       [hidden]="!showThis">
+  <tbody>
+    <tr *ngFor="let key of WINDOW_DATA_KEYS">
+      <td class="mdl-data -table__cell--non-numeric">{{ key }}</td>
+      <td [ngSwitch]="key">
+        <input type="number"
+               *ngSwitchCase="'x'"
+               [(ngModel)]="windowDataCopy[key]">
+        <input type="number"
+               *ngSwitchCase="'y'"
+               [(ngModel)]="windowDataCopy[key]">
+        <input type="number"
+               *ngSwitchCase="'width'"
+               [(ngModel)]="windowDataCopy[key]">
+        <input type="number"
+               *ngSwitchCase="'height'"
+               [(ngModel)]="windowDataCopy[key]">
+        <input type="number"
+               *ngSwitchCase="'wmCurrentDesktopNr'"
+               [(ngModel)]="windowDataCopy[key]">
+        <input type="number"
+               *ngSwitchCase="'gravity'"
+               [(ngModel)]="windowDataCopy[key]">
+        <input type="text"
+               *ngSwitchDefault
+               [(ngModel)]="windowDataCopy[key]">
+      </td>
+    </tr>
+  </tbody>
+</table>

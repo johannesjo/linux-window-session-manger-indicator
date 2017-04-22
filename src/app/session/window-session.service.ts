@@ -18,8 +18,6 @@ export class WindowSessionService {
       this.getSessions()
         .then((sessionData) => {
           const entryToReturn = sessionData.find((entry) => entry.name === sessionName);
-          console.log(entryToReturn, sessionName);
-
           resolve(entryToReturn);
         }, reject);
     });
@@ -33,10 +31,27 @@ export class WindowSessionService {
 
     return new Promise((resolve, reject) => {
       this._electronService.ipcRenderer.send('GET_SESSION_DATA');
-      this._electronService.ipcRenderer.once('GET_SESSION_DATA_READY', (ev, sessionData) => {
+      this._electronService.ipcRenderer.once('GET_SESSION_DATA_SUCCESS', (ev, sessionData) => {
         resolve(sessionData);
       });
       this._electronService.ipcRenderer.once('GET_SESSION_DATA_ERROR', (ev, error) => {
+        reject(error);
+      });
+    });
+  }
+
+  saveSession(sessionData: WindowSession): Promise<any> {
+    // send back mock for browser dev
+    if (!this._electronService.ipcRenderer) {
+      return Promise.resolve({});
+    }
+
+    return new Promise((resolve, reject) => {
+      this._electronService.ipcRenderer.send('SAVE_SESSION_DATA', sessionData);
+      this._electronService.ipcRenderer.once('SAVE_SESSION_DATA_SUCCESS', () => {
+        resolve(sessionData);
+      });
+      this._electronService.ipcRenderer.once('SAVE_SESSION_DATA_ERROR', (ev, error) => {
         reject(error);
       });
     });

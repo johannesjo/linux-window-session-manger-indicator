@@ -259,17 +259,17 @@ electron.ipcMain.on('GET_SESSION_DATA', () => {
       }
 
       // send data
-      mainWin.webContents.send('GET_SESSION_DATA_READY', entries);
+      mainWin.webContents.send('GET_SESSION_DATA_SUCCESS', entries);
     }
   });
 });
 
-electron.ipcMain.on('SAVE_SESSION_DATA', (ev, data) => {
-  db.save(data.sessionName, data.data, (err) => {
-    if (!err) {
-      mainWin.webContents.send('SAVED_SESSION_DATA');
+electron.ipcMain.on('SAVE_SESSION_DATA', (ev, sessionData) => {
+  db.save(sessionData.name, sessionData, (err, res) => {
+    if (err) {
+      mainWin.webContents.send('SAVE_SESSION_DATA_ERROR', err);
     } else {
-
+      mainWin.webContents.send('SAVE_SESSION_DATA_SUCCESS', res);
     }
   });
 });
