@@ -56,7 +56,7 @@ app.on('ready', createWindow);
 app.on('ready', setApplicationMenu);
 app.on('ready', createTray);
 app.on('ready', () => {
-  setInterval(checkMonitors, CONFIG.PING_INTERVAL);
+  // setInterval(checkMonitors, CONFIG.PING_INTERVAL);
 });
 app.on('ready', () => {
   // hide initially
@@ -248,7 +248,30 @@ function beforeQuit() {
   electron.globalShortcut.unregisterAll();
 }
 
+let lastConnectedDisplayId;
 function checkMonitors() {
+  console.log('CHECK');
+  if (lastLoadedSession) {
+    lwsm.getConnectedDisplaysId()
+      .then((connectedDisplayId) => {
+        if (lastConnectedDisplayId !== connectedDisplayId) {
+          console.log(lastConnectedDisplayId, connectedDisplayId, lastLoadedSession);
+          // update value
+          lastConnectedDisplayId = connectedDisplayId;
+
+          // check again
+          if (lastLoadedSession) {
+            lwsm.restoreSession(sessionName)
+              .then(() => {
+                lastLoadedSession = sessionName;
+              })
+              .catch((err) => {
+                console.error(err);
+              });
+          }
+        }
+      });
+  }
 }
 
 function takeScreenShotForSession(sessionName, cb) {
@@ -326,9 +349,11 @@ electron.ipcMain.on('SAVE_CURRENT_SESSION', (ev, sessionName) => {
     });
 });
 
+let lastLoadedSession;
 electron.ipcMain.on('LOAD_SESSION', (ev, sessionName) => {
   lwsm.restoreSession(sessionName)
     .then(() => {
+      lastLoadedSession = sessionName;
       mainWin.webContents.send('LOAD_SESSION_SUCCESS');
     })
     .catch((err) => {

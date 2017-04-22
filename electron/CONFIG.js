@@ -1,3 +1,3 @@
 module.exports = {
-  PING_INTERVAL: 15000,
+  PING_INTERVAL: 10000,
 };
