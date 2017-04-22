@@ -8,9 +8,10 @@ import {WindowData} from '../window-data';
 })
 export class WindowDataEntryComponent implements OnInit {
   @Input() windowData: WindowData;
-  windowDataCopy: WindowData;
   @Output() saveEv: EventEmitter<string> = new EventEmitter();
   @Output() removeEv: EventEmitter<string> = new EventEmitter();
+  windowDataCopy: WindowData;
+
   WINDOW_DATA_KEYS = [
     'wmCurrentDesktopNr',
     'x',
