@@ -26,11 +26,11 @@ import {BusyConfig, BusyModule} from 'angular2-busy';
     HttpModule,
     MdlModule,
     BusyModule.forRoot(
-      new BusyConfig({
+      <BusyConfig>{
         backdrop: true,
         delay: 0,
         minDuration: 300,
-      })
+      }
     ),
     NgxElectronModule,
     RouterModule.forRoot([

@@ -3,6 +3,7 @@
 const path = require('path');
 const url = require('url');
 const fs = require('fs');
+const exec = require('child_process').exec;
 const electron = require('electron');
 const lwsm = require('linux-window-session-manager');
 
@@ -36,6 +37,13 @@ if (shouldQuitBecauseAppIsAnotherInstance) {
   console.log('QUITING because another instance is running already');
   app.exit(1);
   process.exit(1);
+}
+
+let ASSET_FILE_PATH;
+if (process.env.NODE_ENV === 'DEV') {
+  ASSET_FILE_PATH = __dirname + '/../src/assets/screens/';
+} else {
+  ASSET_FILE_PATH = __dirname + '/../dist/assets/screens/';
 }
 
 // APP LISTENERS
@@ -93,8 +101,6 @@ function createWindow() {
       })
     );
   }
-
-
 
   // open new window links in browser
   mainWin.webContents.on('new-window', function (event, url) {
@@ -180,8 +186,6 @@ function createTray() {
 }
 
 function setContextMenu() {
-  console.log('SET CONTEXT');
-
   const menu = [
     {
       label: 'Show App',
@@ -221,6 +225,7 @@ function setContextMenu() {
       label: 'save current to ' + sessionName,
       click: () => {
         lwsm.saveSession(sessionName, inputHandlers);
+        takeScreenShotForSession(sessionName);
       }
     })
   });
@@ -244,7 +249,17 @@ function beforeQuit() {
 }
 
 function checkMonitors() {
+}
 
+function takeScreenShotForSession(sessionName, cb) {
+  exec(`gnome-screenshot --file ${ASSET_FILE_PATH}${sessionName}.jpg`, (err, res) => {
+    if (err) {
+      console.error(err);
+    }
+    if (cb) {
+      cb(res);
+    }
+  })
 }
 
 // FRONTEND LISTENERS
@@ -299,7 +314,9 @@ electron.ipcMain.on('SAVE_CURRENT_SESSION', (ev, sessionName) => {
   lwsm.saveSession(sessionName, inputHandlers)
     .then(() => {
       setContextMenu();
-      mainWin.webContents.send('SAVE_CURRENT_SESSION_SUCCESS');
+      takeScreenShotForSession(sessionName, () => {
+        mainWin.webContents.send('SAVE_CURRENT_SESSION_SUCCESS');
+      });
     })
     .catch((err) => {
       mainWin.webContents.send('SAVE_CURRENT_SESSION_ERROR', err);
