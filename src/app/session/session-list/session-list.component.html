@@ -16,12 +16,6 @@
       </div>
 
     </mdl-card-supporting-text>
-    <!--<mdl-card-actions mdl-card-border>-->
-    <!--<button mdl-button-->
-    <!--mdl-colored-->
-    <!--mdl-ripple>Get Started-->
-    <!--</button>-->
-    <!--</mdl-card-actions>-->
     <mdl-card-menu>
       <button mdl-button
               mdl-button-type="icon"
@@ -52,14 +46,22 @@
 
   <!-- new session card -->
   <mdl-card mdl-shadow="3"
+            style="text-align: center;"
             mdl-card-expand="true"
             class="mdl-cell mdl-cell--6-col">
     <mdl-card-title>
       <h2 mdl-card-title-text>Save current windows to new session</h2>
     </mdl-card-title>
     <mdl-card-supporting-text>
-      <input type="text"
-             [(ngModel)]="newSessionName">
+      <div class="mdl-textfield mdl-js-textfield">
+        <input class="mdl-textfield__input"
+               type="text"
+               id="newSessionName"
+               [(ngModel)]="newSessionName"/>
+        <label class="mdl-textfield__label"
+               for="newSessionName">New session name
+        </label>
+      </div>
       <button mdl-button
               mdl-ripple
               (click)="saveNewSession(newSessionName)">

@@ -1,6 +1,6 @@
 <div *ngIf="session">
   <h4>Edit: {{ session.name }}</h4>
-
+  <a [routerLink]="['/session-list']">Go back to overview</a>
   <div *ngFor="let displayCombo of session.displaysCombinations">
     <h5>Resolution (total of screen combination): {{ displayCombo.id }}</h5>
 
