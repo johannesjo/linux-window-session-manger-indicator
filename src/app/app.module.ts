@@ -5,6 +5,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
 import {MdlModule} from '@angular-mdl/core';
+import {HashLocationStrategy, LocationStrategy} from '@angular/common';
 import {NgxElectronModule} from 'ngx-electron';
 import {AppComponent} from './app.component';
 import {SessionListComponent} from './session/session-list/session-list.component';
@@ -49,7 +50,10 @@ import {BusyConfig, BusyModule} from 'angular2-busy';
       }
     ])
   ],
-  providers: [],
+  providers: [
+    // use hash urls for better reloading capabilities inside electron context
+    {provide: LocationStrategy, useClass: HashLocationStrategy}
+  ],
   bootstrap: [AppComponent]
 })
 
