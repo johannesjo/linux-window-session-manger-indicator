@@ -19,10 +19,10 @@ const app = electron.app;
 // CONSTANTS
 // ---------
 const ELECTRON_ICONS_FOLDER = __dirname + '/assets/icons/';
-
+const IS_DEV = (process.env.NODE_ENV === 'DEV');
 let FRONTEND_DIR;
 const SCREENSHOTS_DIR = LWSM_CFG.SESSION_DATA_DIR + '/screens/';
-if (process.env.NODE_ENV === 'DEV') {
+if (IS_DEV) {
   FRONTEND_DIR = __dirname + '/../src/';
 } else {
   FRONTEND_DIR = __dirname + '/../dist-frontend/';
@@ -43,7 +43,7 @@ if (!fs.existsSync(SCREENSHOTS_DIR)) {
   fs.mkdirSync(SCREENSHOTS_DIR);
 }
 
-if (process.env.NODE_ENV === 'DEV') {
+if (IS_DEV) {
   const cmd = `rm ${FRONTEND_DIR + 'assets/screens'} && ln -s ${LWSM_CFG.SESSION_DATA_DIR} ${FRONTEND_DIR + 'assets/screens'}`;
 
   // setup symbolic link to folder for dev
@@ -81,7 +81,9 @@ app.on('ready', () => {
 });
 app.on('ready', () => {
   // hide initially
-  // mainWin.hide();
+  if (!(IS_DEV)) {
+    mainWin.hide();
+  }
 });
 
 app.on('before-quit', beforeQuit);
@@ -100,12 +102,11 @@ app.on('activate', function () {
 // FUNCTIONS
 // --------------------
 function createWindow() {
-
   // Create the browser window.
   mainWin = new electron.BrowserWindow({ width: 800, height: 600 });
   mainWin.webContents.openDevTools();
 
-  if (process.env.NODE_ENV === 'DEV') {
+  if (IS_DEV) {
     mainWin.loadURL('http://localhost:4200/');
 
     // Open the DevTools.
@@ -322,7 +323,7 @@ electron.ipcMain.on('SHUTDOWN', () => {
 electron.ipcMain.on('GET_CFG', () => {
   mainWin.webContents.send('GET_CFG_SUCCESS', {
     lwsmCfg: LWSM_CFG,
-    screenshotDir: devOnlyScreenshotDirForFrontend || SCREENSHOTS_DIR
+    screenshotDir: IS_DEV ? devOnlyScreenshotDirForFrontend : SCREENSHOTS_DIR
   });
 });
 
