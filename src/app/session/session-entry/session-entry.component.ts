@@ -45,6 +45,12 @@ export class SessionEntryComponent implements OnInit, OnDestroy {
       });
   }
 
+  removeDisplayCombo(displayEntryId: string, displaysCombinations): void {
+    const index = displaysCombinations.findIndex((entry) => entry.windowId === displayEntryId);
+    displaysCombinations.splice(index, 1);
+    this.saveSession();
+  }
+
   removeEntry(entryId: string, windowList) {
     const index = windowList.findIndex((entry) => entry.windowId === entryId);
     windowList.splice(index, 1);

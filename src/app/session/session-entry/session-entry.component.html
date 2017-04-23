@@ -3,8 +3,14 @@
   <h4>Edit: {{ session.name }}</h4>
   <a [routerLink]="['/session-list']">Go back to overview</a>
   <div *ngFor="let displayCombo of session.displaysCombinations">
-    <h5>Resolution (total of screen combination): {{ displayCombo.id }}</h5>
-
+    <h5>Resolution (total of screen combination): {{ displayCombo.id }}
+      <button mdl-button
+              mdl-button-type="icon"
+              mdl-ripple
+              (click)="removeDisplayCombo(displayCombo.id, session.displaysCombinations)">
+        <mdl-icon>delete</mdl-icon>
+      </button>
+    </h5>
     <div *ngFor="let windowData of displayCombo.windowList">
       <app-window-data-entry [windowData]="windowData"
                              (saveEv)="saveEntry($event,displayCombo.windowList)"
