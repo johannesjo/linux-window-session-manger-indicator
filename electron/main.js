@@ -35,11 +35,20 @@ if (process.env.NODE_ENV === 'DEV') {
 let mainWin;
 let darwinForceQuit = false;
 let tray = null;
+let devOnlyScreenshotDirForFrontend;
 
 // INIT
 // ------
 if (!fs.existsSync(SCREENSHOTS_DIR)) {
   fs.mkdirSync(SCREENSHOTS_DIR);
+}
+
+if (process.env.NODE_ENV === 'DEV') {
+  const cmd = `rm ${FRONTEND_DIR + 'assets/screens'} && ln -s ${LWSM_CFG.SESSION_DATA_DIR} ${FRONTEND_DIR + 'assets/screens'}`;
+
+  // setup symbolic link to folder for dev
+  exec(cmd);
+  devOnlyScreenshotDirForFrontend = '/assets/screens/';
 }
 
 // Make it a single instance
@@ -313,7 +322,7 @@ electron.ipcMain.on('SHUTDOWN', () => {
 electron.ipcMain.on('GET_CFG', () => {
   mainWin.webContents.send('GET_CFG_SUCCESS', {
     lwsmCfg: LWSM_CFG,
-    screenshotDir: SCREENSHOTS_DIR
+    screenshotDir: devOnlyScreenshotDirForFrontend || SCREENSHOTS_DIR
   });
 });
 
