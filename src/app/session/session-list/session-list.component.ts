@@ -1,13 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {WindowSession} from '../window-session';
 import {WindowSessionService} from '../window-session.service';
-import {LwsmService} from '../../lwsm.service';
+import {CfgService} from '../../cfg.service';
 
 @Component({
   selector: 'app-session-list',
   templateUrl: './session-list.component.html',
   styleUrls: ['./session-list.component.scss'],
-  providers: [WindowSessionService, LwsmService]
+  providers: [WindowSessionService, CfgService]
 })
 export class SessionListComponent implements OnInit {
   sessions: WindowSession[];
@@ -16,7 +16,7 @@ export class SessionListComponent implements OnInit {
   isLoading: Promise<any>;
 
 
-  constructor(private windowSessionService: WindowSessionService, private lwsmService: LwsmService) {
+  constructor(private windowSessionService: WindowSessionService, private cfgService: CfgService) {
   }
 
   ngOnInit(): void {
@@ -25,7 +25,7 @@ export class SessionListComponent implements OnInit {
   }
 
   getScreenshotDir(): void {
-    this.lwsmService.getCfg()
+    this.cfgService.get()
       .then((res) => {
         this.screenshotDir = res && res.screenshotDir || '';
       });
