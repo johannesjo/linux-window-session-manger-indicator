@@ -10,19 +10,37 @@ const lwsm = require('linux-window-session-manager');
 const LWSM_CFG = lwsm.getCfg();
 const db = lwsm.getDb();
 
-console.log(LWSM_CFG.SESSION_DATA_DIR);
 const CONFIG = require('./CONFIG');
 const inputHandlers = require('./inputHandlers');
-const ICONS_FOLDER = __dirname + '/assets/icons/';
 
 // Module to control application life.
 const app = electron.app;
 
+// CONSTANTS
+// ---------
+const ELECTRON_ICONS_FOLDER = __dirname + '/assets/icons/';
+
+let FRONTEND_DIR;
+const SCREENSHOTS_DIR = LWSM_CFG.SESSION_DATA_DIR + '/screens/';
+if (process.env.NODE_ENV === 'DEV') {
+  FRONTEND_DIR = __dirname + '/../src/';
+} else {
+  FRONTEND_DIR = __dirname + '/../dist-frontend/';
+}
+
+// OTHER GLOBAL VARS
+// -----------------
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWin;
 let darwinForceQuit = false;
 let tray = null;
+
+// INIT
+// ------
+if (!fs.existsSync(SCREENSHOTS_DIR)) {
+  fs.mkdirSync(SCREENSHOTS_DIR);
+}
 
 // Make it a single instance
 let shouldQuitBecauseAppIsAnotherInstance = app.makeSingleInstance(() => {
@@ -33,17 +51,11 @@ let shouldQuitBecauseAppIsAnotherInstance = app.makeSingleInstance(() => {
     mainWin.focus();
   }
 });
+
 if (shouldQuitBecauseAppIsAnotherInstance) {
   console.log('QUITING because another instance is running already');
   app.exit(1);
   process.exit(1);
-}
-
-let ASSET_FILE_PATH;
-if (process.env.NODE_ENV === 'DEV') {
-  ASSET_FILE_PATH = __dirname + '/../src/assets/screens/';
-} else {
-  ASSET_FILE_PATH = __dirname + '/../dist/assets/screens/';
 }
 
 // APP LISTENERS
@@ -79,8 +91,10 @@ app.on('activate', function () {
 // FUNCTIONS
 // --------------------
 function createWindow() {
+
   // Create the browser window.
   mainWin = new electron.BrowserWindow({ width: 800, height: 600 });
+  mainWin.webContents.openDevTools();
 
   if (process.env.NODE_ENV === 'DEV') {
     mainWin.loadURL('http://localhost:4200/');
@@ -91,13 +105,13 @@ function createWindow() {
     // and load the index.html of the app.
     mainWin.loadURL(
       url.format({
-        pathname: path.join(__dirname, '../dist/index.html'),
+        pathname: path.join(FRONTEND_DIR + '/index.html'),
         protocol: 'file:',
         slashes: true,
         webPreferences: {
           scrollBounce: true
         },
-        icon: ICONS_FOLDER + '/app-icons/icon_256x256.png'
+        icon: ELECTRON_ICONS_FOLDER + '/app-icons/icon_256x256.png'
       })
     );
   }
@@ -177,7 +191,7 @@ function createTray() {
     trayIcoFile = 'tray-ico.png'
   }
 
-  tray = new electron.Tray(ICONS_FOLDER + trayIcoFile);
+  tray = new electron.Tray(ELECTRON_ICONS_FOLDER + trayIcoFile);
   setContextMenu();
 
   //tray.on('click', () => {
@@ -277,7 +291,7 @@ function checkMonitors() {
 function takeScreenShotForSession(sessionName, cb) {
   lwsm.getConnectedDisplaysId()
     .then((connectedDisplaysId) => {
-      exec(`gnome-screenshot --file ${ASSET_FILE_PATH}${sessionName}-${connectedDisplaysId}.jpg`, (err, res) => {
+      exec(`gnome-screenshot --file ${SCREENSHOTS_DIR}${sessionName}-${connectedDisplaysId}.jpg`, (err, res) => {
         if (err) {
           console.error(err);
         }
@@ -294,6 +308,13 @@ function takeScreenShotForSession(sessionName, cb) {
 electron.ipcMain.on('SHUTDOWN', () => {
   app.isQuiting = true;
   app.quit();
+});
+
+electron.ipcMain.on('GET_CFG', () => {
+  mainWin.webContents.send('GET_CFG_SUCCESS', {
+    lwsmCfg: LWSM_CFG,
+    screenshotDir: SCREENSHOTS_DIR
+  });
 });
 
 electron.ipcMain.on('GET_SESSION_DATA', () => {

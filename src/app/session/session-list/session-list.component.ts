@@ -1,23 +1,34 @@
 import {Component, OnInit} from '@angular/core';
 import {WindowSession} from '../window-session';
 import {WindowSessionService} from '../window-session.service';
+import {LwsmService} from '../../lwsm.service';
 
 @Component({
   selector: 'app-session-list',
   templateUrl: './session-list.component.html',
   styleUrls: ['./session-list.component.scss'],
-  providers: [WindowSessionService]
+  providers: [WindowSessionService, LwsmService]
 })
 export class SessionListComponent implements OnInit {
   sessions: WindowSession[];
   newSessionName: string;
+  screenshotDir: string;
   isLoading: Promise<any>;
 
-  constructor(private windowSessionService: WindowSessionService) {
+
+  constructor(private windowSessionService: WindowSessionService, private lwsmService: LwsmService) {
   }
 
   ngOnInit(): void {
     this.getSessions();
+    this.getScreenshotDir();
+  }
+
+  getScreenshotDir(): void {
+    this.lwsmService.getCfg()
+      .then((res) => {
+        this.screenshotDir = res && res.screenshotDir || '';
+      });
   }
 
   getSessions(): void {
