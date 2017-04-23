@@ -11,6 +11,7 @@ export class WindowDataEntryComponent implements OnInit {
   @Output() saveEv: EventEmitter<string> = new EventEmitter();
   @Output() removeEv: EventEmitter<string> = new EventEmitter();
   windowDataCopy: WindowData;
+  showEdit:boolean;
 
   WINDOW_DATA_KEYS = [
     'wmCurrentDesktopNr',

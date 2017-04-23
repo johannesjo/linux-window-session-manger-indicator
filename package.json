@@ -10,6 +10,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "start": "NODE_ENV=DEV electron ./electron/main.js",
+    "startDist": "electron ./electron/main.js",
     "pack": "build --dir",
     "localInstall": "sudo echo 'HIHI' && rm -Rf ./dist/ && ng build && build && sudo dpkg -i dist/lwsm*.deb"
   },
