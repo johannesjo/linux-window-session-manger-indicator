@@ -11,9 +11,10 @@
     "e2e": "ng e2e",
     "start": "NODE_ENV=DEV electron ./electron/main.js",
     "pack": "build --dir",
-    "localInstall": "sudo echo 'HIHI' && rm -Rf ./dist/ && gulp build && build && sudo dpkg -i dist/linuxWindowSessionManager*.deb"
+    "localInstall": "sudo echo 'HIHI' && rm -Rf ./dist/ && ng build && build && sudo dpkg -i dist/lwsm*.deb"
   },
   "author": "Johannes Millan <contact@super-productivity.com> (http://super-productivity.com)",
+  "description": "An indicator app to save and restore window sessions aka open programs and window positions.",
   "build": {
     "appId": "linuxWindowSessionManager",
     "mac": {
